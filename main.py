@@ -32,7 +32,7 @@ enteruserlogin.grid(row=0, column=1)
 enteruserpassword.grid(row=1, column=1)
 
 
-def timedel():
+def timedel(db, sql, enteruserlogin, enteruserpassword):
     userlogin = enteruserlogin.get()
     userpassword = enteruserpassword.get()
     timedelete = timedelta(1095)
@@ -46,7 +46,7 @@ def timedel():
     db.commit()
 
 
-def databupdate():
+def databupdate(db, sql, enteruserlogin, enteruserpassword):
     userlogin = enteruserlogin.get()
     userpassword = enteruserpassword.get()
     sql.execute("SELECT date FROM students WHERE login = ? AND password = ?", (userlogin, userpassword))
@@ -69,7 +69,7 @@ def databupdate():
     newzp = Entry(root)
     newzp.grid(row=26, column=1)
 
-    def update():
+    def update(db, sql, enteruserlogin, enteruserpassword):
         newlogin = newlg.get()
         sql.execute("""UPDATE students SET login = ? WHERE login = ? AND password = ?""",
                     (newlogin, userlogin, userpassword))
@@ -92,12 +92,14 @@ def databupdate():
         for value in sql.execute(f"SELECT * FROM students WHERE login = '{newlogin}'"
                                  f"AND password = '{newpassword}'"):
             Label(root, text=value).grid(row=66, column=1)
-        Button(root, text='Хотите изменить?', command=databupdate).grid(row=100, column=1)
+        Button(root, text='Хотите изменить?',
+               command=lambda: databupdate(db, sql, enteruserlogin, enteruserpassword)).grid(row=100, column=1)
         db.commit()
-    Button(root, text='Изменить данные', command=update).grid(row=51, column=1)
+    Button(root, text='Изменить данные',
+           command=lambda: update(db, sql, enteruserlogin, enteruserpassword)).grid(row=51, column=1)
 
 
-def getentrytwo():
+def getentrytwo(db, sql, enteruserlogin, enteruserpassword):
     userlogin = enteruserlogin.get()
     userpassword = enteruserpassword.get()
     sql.execute(f"SELECT login FROM students WHERE login = '{userlogin}' AND password = '{userpassword}'")
@@ -107,14 +109,15 @@ def getentrytwo():
         for value in sql.execute(f"SELECT * FROM students WHERE login = '{userlogin}'"
                                  f"AND password = '{userpassword}'"):
             Label(root, text=value).grid(row=13, column=1)
-            Button(root, text='Хотите изменить?', command=databupdate).grid(row=14, column=1)
-            timedel()
+            Button(root, text='Хотите изменить?',
+                   command=lambda: databupdate(db, sql, enteruserlogin, enteruserpassword)).grid(row=14, column=1)
+            timedel(db, sql, enteruserlogin, enteruserpassword)
 
 
-Button(root, text="Войти", command=getentrytwo).grid(row=2, column=0)
+Button(root, text="Войти", command=lambda: getentrytwo(db, sql, enteruserlogin, enteruserpassword)).grid(row=2, column=0)
 
 
-def reg():
+def reg(db, sql, enteruserlogin, enteruserpassword):
     Label(root, text="Зарегистрируйтесь!").grid(row=4, column=1)
     Label(root, text="Login: ", justify=RIGHT).grid(row=5, column=0)
     newuserlogin = tk.Entry(root)
@@ -135,7 +138,7 @@ def reg():
     newuserzp = tk.Entry(root)
     newuserzp.grid(row=10, column=1)
 
-    def getnewdata():
+    def getnewdata(db, sql, enteruserlogin, enteruserpassword):
         userlogin = newuserlogin.get()
         userpassword = newuserpassword.get()
         userfio = newuserfio.get()
@@ -153,17 +156,21 @@ def reg():
             for value in sql.execute(f"SELECT * FROM students WHERE login = '{userlogin}'"
                                      f"AND password = '{userpassword}'"):
                 Label(root, text=value).grid(row=13, column=1)
-                Button(root, text='Хотите изменить?', command=databupdate).grid(row=14, column=1)
+                Button(root, text='Хотите изменить?',
+                       command=lambda: databupdate(db, sql, enteruserlogin, enteruserpassword)).grid(row=14, column=1)
         else:
             Label(root, text="Такая запись уже существует вы вошли в учетную запись")
             for value in sql.execute(f"SELECT * FROM students WHERE login = '{userlogin}'"
                                      f"AND password = '{userpassword}'"):
                 Label(root, text=value).grid(row=13, column=1)
-                Button(root, text='Хотите изменить?', command=databupdate).grid(row=14, column=1)
-    Button(root, text="Зарегистрироваться!", command=getnewdata).grid(row=11, column=1)
+                Button(root, text='Хотите изменить?',
+                       command=lambda: databupdate(db, sql, enteruserlogin, enteruserpassword)).grid(row=14, column=1)
+    Button(root, text="Зарегистрироваться!",
+           command=lambda: getnewdata(db, sql, enteruserlogin, enteruserpassword)).grid(row=11, column=1)
 
 
-Button(root, text="Пройдите регистрацию", command=reg).grid(row=3, column=0)
+Button(root, text="Пройдите регистрацию",
+       command=lambda: reg(db, sql, enteruserlogin, enteruserpassword)).grid(row=3, column=0)
 root.mainloop()
 
 sql.execute('select * FROM students')
