@@ -1,35 +1,8 @@
 from excel import excel
-import sqlite3
-from tkinter import *
+from database import db, sql
+from gui import root, enteruserlogin, enteruserpassword
 import tkinter as tk
 from datetime import timedelta, datetime
-
-db = sqlite3.connect("data/database.db")
-sql = db.cursor()
-
-sql.execute("""CREATE TABLE IF NOT EXISTS students (
-login VARCHAR[15],
-password VARCHAR[15],
-fio VARCHAR[35],
-rabota VARCHAR(40),
-number VARCHAR(11),
-zp VARCHAR(20),
-date TEXT
-)""")
-
-
-db.commit()
-root = Tk()
-root.geometry("600x900+100+100")
-root.title('Программа для студентов')
-
-Label(root, text="Login: ").grid(row=0, column=0)
-Label(root, text="Password: ").grid(row=1, column=0)
-
-enteruserlogin = tk.Entry(root)
-enteruserpassword = tk.Entry(root)
-enteruserlogin.grid(row=0, column=1)
-enteruserpassword.grid(row=1, column=1)
 
 
 def timedel(db, sql, enteruserlogin, enteruserpassword):
@@ -50,23 +23,23 @@ def databupdate(db, sql, enteruserlogin, enteruserpassword):
     userlogin = enteruserlogin.get()
     userpassword = enteruserpassword.get()
     sql.execute("SELECT date FROM students WHERE login = ? AND password = ?", (userlogin, userpassword))
-    Label(text='Логин ').grid(row=21, column=0)
-    Label(text='Пароль ').grid(row=22, column=0)
-    Label(text='ФИО ').grid(row=23, column=0)
-    Label(text='Место Работы ').grid(row=24, column=0)
-    Label(text='Номер ').grid(row=25, column=0)
-    Label(text='ЗП').grid(row=26, column=0)
-    newlg = Entry(root)
+    tk.Label(text='Логин ').grid(row=21, column=0)
+    tk.Label(text='Пароль ').grid(row=22, column=0)
+    tk.Label(text='ФИО ').grid(row=23, column=0)
+    tk.Label(text='Место Работы ').grid(row=24, column=0)
+    tk.Label(text='Номер ').grid(row=25, column=0)
+    tk.Label(text='ЗП').grid(row=26, column=0)
+    newlg = tk.Entry(root)
     newlg.grid(row=21, column=1)
-    newps = Entry(root)
+    newps = tk.Entry(root)
     newps.grid(row=22, column=1)
-    newfio = Entry(root)
+    newfio = tk.Entry(root)
     newfio.grid(row=23, column=1)
-    newwk = Entry(root)
+    newwk = tk.Entry(root)
     newwk.grid(row=24, column=1)
-    newnumb = Entry(root)
+    newnumb = tk.Entry(root)
     newnumb.grid(row=25, column=1)
-    newzp = Entry(root)
+    newzp = tk.Entry(root)
     newzp.grid(row=26, column=1)
 
     def update(db, sql, enteruserlogin, enteruserpassword):
@@ -88,15 +61,15 @@ def databupdate(db, sql, enteruserlogin, enteruserpassword):
         newzarplata = newzp.get()
         sql.execute("""UPDATE students SET zp = ? WHERE login = ? AND password = ?""",
                     (newzarplata, userlogin, userpassword))
-        Label(root, text='Запись успешно изменена!').grid(row=99, column=1)
+        tk.Label(root, text='Запись успешно изменена!').grid(row=99, column=1)
         for value in sql.execute(f"SELECT * FROM students WHERE login = '{newlogin}'"
                                  f"AND password = '{newpassword}'"):
-            Label(root, text=value).grid(row=66, column=1)
-        Button(root, text='Хотите изменить?',
-               command=lambda: databupdate(db, sql, enteruserlogin, enteruserpassword)).grid(row=100, column=1)
+            tk.Label(root, text=value).grid(row=66, column=1)
+        tk.Button(root, text='Хотите изменить?',
+                  command=lambda: databupdate(db, sql, enteruserlogin, enteruserpassword)).grid(row=100, column=1)
         db.commit()
-    Button(root, text='Изменить данные',
-           command=lambda: update(db, sql, enteruserlogin, enteruserpassword)).grid(row=51, column=1)
+    tk.Button(root, text='Изменить данные',
+              command=lambda: update(db, sql, enteruserlogin, enteruserpassword)).grid(row=51, column=1)
 
 
 def getentrytwo(db, sql, enteruserlogin, enteruserpassword):
@@ -104,37 +77,38 @@ def getentrytwo(db, sql, enteruserlogin, enteruserpassword):
     userpassword = enteruserpassword.get()
     sql.execute(f"SELECT login FROM students WHERE login = '{userlogin}' AND password = '{userpassword}'")
     if sql.fetchone() is None:
-        Label(root, text="Такой учетной записи не существует!").grid(row=19, column=1)
+        tk.Label(root, text="Такой учетной записи не существует!").grid(row=19, column=1)
     else:
         for value in sql.execute(f"SELECT * FROM students WHERE login = '{userlogin}'"
                                  f"AND password = '{userpassword}'"):
-            Label(root, text=value).grid(row=13, column=1)
-            Button(root, text='Хотите изменить?',
-                   command=lambda: databupdate(db, sql, enteruserlogin, enteruserpassword)).grid(row=14, column=1)
+            tk.Label(root, text=value).grid(row=13, column=1)
+            tk.Button(root, text='Хотите изменить?',
+                      command=lambda: databupdate(db, sql, enteruserlogin, enteruserpassword)).grid(row=14, column=1)
             timedel(db, sql, enteruserlogin, enteruserpassword)
 
 
-Button(root, text="Войти", command=lambda: getentrytwo(db, sql, enteruserlogin, enteruserpassword)).grid(row=2, column=0)
+tk.Button(root, text="Войти",
+          command=lambda: getentrytwo(db, sql, enteruserlogin, enteruserpassword)).grid(row=2, column=0)
 
 
 def reg(db, sql, enteruserlogin, enteruserpassword):
-    Label(root, text="Зарегистрируйтесь!").grid(row=4, column=1)
-    Label(root, text="Login: ", justify=RIGHT).grid(row=5, column=0)
+    tk.Label(root, text="Зарегистрируйтесь!").grid(row=4, column=1)
+    tk.Label(root, text="Login: ", justify=tk.RIGHT).grid(row=5, column=0)
     newuserlogin = tk.Entry(root)
     newuserlogin.grid(row=5, column=1)
-    Label(root, text="Password: ", justify=RIGHT).grid(row=6, column=0)
+    tk.Label(root, text="Password: ", justify=tk.RIGHT).grid(row=6, column=0)
     newuserpassword = tk.Entry(root)
     newuserpassword.grid(row=6, column=1)
-    Label(root, text="Введите ФИО: ", justify=RIGHT).grid(row=7, column=0)
+    tk.Label(root, text="Введите ФИО: ", justify=tk.RIGHT).grid(row=7, column=0)
     newuserfio = tk.Entry(root)
     newuserfio.grid(row=7, column=1)
-    Label(root, text="Введите место работы: ", justify=RIGHT).grid(row=8, column=0)
+    tk.Label(root, text="Введите место работы: ", justify=tk.RIGHT).grid(row=8, column=0)
     newuserrabota = tk.Entry(root)
     newuserrabota.grid(row=8, column=1)
-    Label(root, text="Введите номер телефона: ", justify=RIGHT).grid(row=9, column=0)
+    tk.Label(root, text="Введите номер телефона: ", justify=tk.RIGHT).grid(row=9, column=0)
     newusernumber = tk.Entry(root)
     newusernumber.grid(row=9, column=1)
-    Label(root, text="Введите вашу заработную плату: ", justify=RIGHT).grid(row=10, column=0)
+    tk.Label(root, text="Введите вашу заработную плату: ", justify=tk.RIGHT).grid(row=10, column=0)
     newuserzp = tk.Entry(root)
     newuserzp.grid(row=10, column=1)
 
@@ -152,25 +126,27 @@ def reg(db, sql, enteruserlogin, enteruserpassword):
             sql.execute("INSERT INTO students VALUES (?, ?, ?, ?, ?, ?, ?)",
                         (userlogin, userpassword, userfio, userrabota, usernumber, userzp, deta))
             db.commit()
-            Label(root, text="Вы успешно зарегистрировались!")
+            tk.Label(root, text="Вы успешно зарегистрировались!")
             for value in sql.execute(f"SELECT * FROM students WHERE login = '{userlogin}'"
                                      f"AND password = '{userpassword}'"):
-                Label(root, text=value).grid(row=13, column=1)
-                Button(root, text='Хотите изменить?',
-                       command=lambda: databupdate(db, sql, enteruserlogin, enteruserpassword)).grid(row=14, column=1)
+                tk.Label(root, text=value).grid(row=13, column=1)
+                tk.Button(root, text='Хотите изменить?',
+                          command=lambda: databupdate(db, sql, enteruserlogin, enteruserpassword))\
+                    .grid(row=14, column=1)
         else:
-            Label(root, text="Такая запись уже существует вы вошли в учетную запись")
+            tk.Label(root, text="Такая запись уже существует вы вошли в учетную запись")
             for value in sql.execute(f"SELECT * FROM students WHERE login = '{userlogin}'"
                                      f"AND password = '{userpassword}'"):
-                Label(root, text=value).grid(row=13, column=1)
-                Button(root, text='Хотите изменить?',
-                       command=lambda: databupdate(db, sql, enteruserlogin, enteruserpassword)).grid(row=14, column=1)
-    Button(root, text="Зарегистрироваться!",
-           command=lambda: getnewdata(db, sql, enteruserlogin, enteruserpassword)).grid(row=11, column=1)
+                tk.Label(root, text=value).grid(row=13, column=1)
+                tk.Button(root, text='Хотите изменить?',
+                          command=lambda: databupdate(db, sql, enteruserlogin, enteruserpassword))\
+                    .grid(row=14, column=1)
+    tk.Button(root, text="Зарегистрироваться!",
+              command=lambda: getnewdata(db, sql, enteruserlogin, enteruserpassword)).grid(row=11, column=1)
 
 
-Button(root, text="Пройдите регистрацию",
-       command=lambda: reg(db, sql, enteruserlogin, enteruserpassword)).grid(row=3, column=0)
+tk.Button(root, text="Пройдите регистрацию",
+          command=lambda: reg(db, sql, enteruserlogin, enteruserpassword)).grid(row=3, column=0)
 root.mainloop()
 
 sql.execute('select * FROM students')
@@ -178,7 +154,3 @@ val = sql.fetchall()
 
 print(val)
 excel(sql)
-
-
-
-
