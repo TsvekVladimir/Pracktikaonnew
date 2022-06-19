@@ -1,8 +1,7 @@
 import pandas as pd
-from main import sql
 
 
-def excel():
+def excel(sql):
     sql.execute('select * FROM students')
     val = sql.fetchall()
     val = {'Логин': [a_tuple[0] for a_tuple in val], 'Пароль': [a_tuple[1] for a_tuple in val],

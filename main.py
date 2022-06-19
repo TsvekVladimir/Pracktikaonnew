@@ -170,7 +170,7 @@ sql.execute('select * FROM students')
 val = sql.fetchall()
 
 print(val)
-excel()
+excel(sql)
 
 
 
