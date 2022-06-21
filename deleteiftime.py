@@ -1,7 +1,7 @@
 from datetime import timedelta, datetime
 
 
-def timedel(db, sql, enteruserlogin, enteruserpassword):
+def delete_if_time(db, sql, enteruserlogin, enteruserpassword):
     userlogin = enteruserlogin.get()
     userpassword = enteruserpassword.get()
     timedelete = timedelta(1095)

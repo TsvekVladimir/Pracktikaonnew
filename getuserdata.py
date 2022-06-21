@@ -1,9 +1,9 @@
 from gui import tk, root
-from deleteiftime import timedel
-from dataupdate import databupdate
+from deleteiftime import delete_if_time
+from data_update import databupdate
 
 
-def getentrytwo(db, sql, enteruserlogin, enteruserpassword):
+def login(db, sql, enteruserlogin, enteruserpassword):
     userlogin = enteruserlogin.get()
     userpassword = enteruserpassword.get()
     sql.execute(f"SELECT login FROM students WHERE login = '{userlogin}' AND password = '{userpassword}'")
@@ -15,4 +15,4 @@ def getentrytwo(db, sql, enteruserlogin, enteruserpassword):
             tk.Label(root, text=value).grid(row=13, column=1)
             tk.Button(root, text='Хотите изменить?',
                       command=lambda: databupdate(db, sql, enteruserlogin, enteruserpassword)).grid(row=14, column=1)
-            timedel(db, sql, enteruserlogin, enteruserpassword)
+            delete_if_time(db, sql, enteruserlogin, enteruserpassword)

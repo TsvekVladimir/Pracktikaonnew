@@ -1,4 +1,5 @@
 from gui import tk, root
+from excel import excel
 
 
 def databupdate(db, sql, enteruserlogin, enteruserpassword):
@@ -23,6 +24,7 @@ def databupdate(db, sql, enteruserlogin, enteruserpassword):
     newnumb.grid(row=25, column=1)
     newzp = tk.Entry(root)
     newzp.grid(row=26, column=1)
+
     def update(db, sql, enteruserlogin, enteruserpassword):
         newlogin = newlg.get()
         sql.execute("""UPDATE students SET login = ? WHERE login = ? AND password = ?""",
@@ -47,5 +49,6 @@ def databupdate(db, sql, enteruserlogin, enteruserpassword):
                                  f"AND password = '{newpassword}'"):
             tk.Label(root, text=value).grid(row=66, column=1)
         db.commit()
+        excel(sql)
     tk.Button(root, text='Изменить данные',
               command=lambda: update(db, sql, enteruserlogin, enteruserpassword)).grid(row=51, column=1)
