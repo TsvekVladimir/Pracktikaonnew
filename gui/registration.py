@@ -1,6 +1,6 @@
 from gui.gui import tk, root
 from datetime import datetime
-from gui.data_update import databupdate
+from gui.data_update import datab_update
 from excel.excel import excel
 
 
@@ -44,7 +44,7 @@ def registration(db, sql, enteruserlogin, enteruserpassword):
                                      f"AND password = '{userpassword}'"):
                 tk.Label(root, text=value).grid(row=13, column=1)
                 tk.Button(root, text='Хотите изменить?',
-                          command=lambda: databupdate(db, sql, enteruserlogin, enteruserpassword))\
+                          command=lambda: datab_update(sql, enteruserlogin, enteruserpassword))\
                     .grid(row=14, column=1)
                 excel()
         else:
@@ -53,7 +53,7 @@ def registration(db, sql, enteruserlogin, enteruserpassword):
                                      f"AND password = '{userpassword}'"):
                 tk.Label(root, text=value).grid(row=13, column=1)
                 tk.Button(root, text='Хотите изменить?',
-                          command=lambda: databupdate(db, sql, enteruserlogin, enteruserpassword))\
+                          command=lambda: datab_update(sql, enteruserlogin, enteruserpassword))\
                     .grid(row=14, column=1)
     tk.Button(root, text="Зарегистрироваться!",
               command=lambda: getnewdata(db, sql, enteruserlogin, enteruserpassword)).grid(row=11, column=1)
