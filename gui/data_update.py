@@ -2,6 +2,16 @@ from gui.gui import tk, root
 from excel.excel import excel
 
 
+class Userinfo(object):
+    def __init__(self, login, password, fio, work, number, money):
+        self.login = login
+        self.password = password
+        self.fio = fio
+        self.work = work
+        self.number = number
+        self.money = money
+
+
 def datab_update(db, sql, enteruserlogin, enteruserpassword):
     userlogin = enteruserlogin.get()
     userpassword = enteruserpassword.get()
@@ -26,26 +36,26 @@ def datab_update(db, sql, enteruserlogin, enteruserpassword):
     newzp.grid(row=26, column=1)
     tk.Button(root, text='Изменить данные',
               command=lambda: update(db, sql, userlogin, userpassword,
-                                     newlg.get(), newps.get(), newfio.get(), newwk.get(), newnumb.get(), newzp.get()))\
-        .grid(row=51, column=1)
+                                     Userinfo(newlg.get(), newps.get(), newfio.get(), newwk.get(),
+                                     newnumb.get(), newzp.get()))).grid(row=51, column=1)
 
 
-def update(db, sql, userlogin, userpassword, newlg, newps, newfio, newwk, newnumb, newzp):
+def update(db, sql, userlogin, userpassword, Userinfo):
     sql.execute("""UPDATE students SET login = ? WHERE login = ? AND password = ?""",
-                (newlg, userlogin, userpassword))
+                (Userinfo.login, userlogin, userpassword))
     sql.execute("""UPDATE students SET password = ? WHERE login = ? AND password = ?""",
-                (newps, newlg, userpassword))
+                (Userinfo.password, Userinfo.login, userpassword))
     sql.execute("""UPDATE students SET fio = ? WHERE login = ? AND password = ?""",
-                (newfio, newlg, newps))
+                (Userinfo.fio, Userinfo.login, Userinfo.password))
     sql.execute("""UPDATE students SET rabota = ? WHERE login = ? AND password = ?""",
-                (newwk, newlg, newps))
+                (Userinfo.work, Userinfo.login, Userinfo.password))
     sql.execute("""UPDATE students SET number = ? WHERE login = ? AND password = ?""",
-                (newnumb, newlg, newps))
+                (Userinfo.number, Userinfo.login, Userinfo.password))
     sql.execute("""UPDATE students SET zp = ? WHERE login = ? AND password = ?""",
-                (newzp, newlg, newps))
+                (Userinfo.money, Userinfo.login, Userinfo.password))
     tk.Label(root, text='Запись успешно изменена!').grid(row=99, column=1)
-    for value in sql.execute(f"SELECT * FROM students WHERE login = '{newlg}'"
-                             f"AND password = '{newps}'"):
+    for value in sql.execute(f"SELECT * FROM students WHERE login = '{Userinfo.login}'"
+                             f"AND password = '{Userinfo.password}'"):
         tk.Label(root, text=value).grid(row=66, column=1)
         db.commit()
     excel()
