@@ -9,5 +9,5 @@ def excel():
            'ФИО': [a_tuple[2] for a_tuple in val], 'Работа': [a_tuple[3] for a_tuple in val],
            'Номер телефона': [a_tuple[4] for a_tuple in val], 'Зарплата': [a_tuple[5] for a_tuple in val]}
     z = pd.DataFrame(val)
-    z.to_excel("excel/database.xlsx", sheet_name='Студенты', index_label='id')
+    z.to_excel("data/database.xlsx", sheet_name='Студенты', index_label='id')
     print(val)

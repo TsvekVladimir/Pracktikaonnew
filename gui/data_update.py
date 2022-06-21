@@ -31,19 +31,19 @@ def databupdate(db, sql, enteruserlogin, enteruserpassword):
                     (newlogin, userlogin, userpassword))
         newpassword = newps.get()
         sql.execute("""UPDATE students SET password = ? WHERE login = ? AND password = ?""",
-                    (newpassword, userlogin, userpassword))
+                    (newpassword, newlogin, userpassword))
         newfior = newfio.get()
         sql.execute("""UPDATE students SET fio = ? WHERE login = ? AND password = ?""",
-                    (newfior, userlogin, userpassword))
+                    (newfior, newlogin, newpassword))
         newwork = newwk.get()
         sql.execute("""UPDATE students SET rabota = ? WHERE login = ? AND password = ?""",
-                    (newwork, userlogin, userpassword))
+                    (newwork, newlogin, newpassword))
         newnumber = newnumb.get()
         sql.execute("""UPDATE students SET number = ? WHERE login = ? AND password = ?""",
-                    (newnumber, userlogin, userpassword))
+                    (newnumber, newlogin, newpassword))
         newzarplata = newzp.get()
         sql.execute("""UPDATE students SET zp = ? WHERE login = ? AND password = ?""",
-                    (newzarplata, userlogin, userpassword))
+                    (newzarplata, newlogin, newpassword))
         tk.Label(root, text='Запись успешно изменена!').grid(row=99, column=1)
         for value in sql.execute(f"SELECT * FROM students WHERE login = '{newlogin}'"
                                  f"AND password = '{newpassword}'"):
