@@ -1,6 +1,6 @@
-from gui import tk, root
-from deleteiftime import delete_if_time
-from data_update import databupdate
+from gui.gui import tk, root
+from delete_if_time.deleteiftime import delete_if_time
+from gui.data_update import databupdate
 
 
 def login(db, sql, enteruserlogin, enteruserpassword):

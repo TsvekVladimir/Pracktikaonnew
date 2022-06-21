@@ -1,7 +1,7 @@
-from gui import tk, root
+from gui.gui import tk, root
 from datetime import datetime
-from data_update import databupdate
-from excel import excel
+from gui.data_update import databupdate
+from excel.excel import excel
 
 
 def registration(db, sql, enteruserlogin, enteruserpassword):
@@ -46,7 +46,7 @@ def registration(db, sql, enteruserlogin, enteruserpassword):
                 tk.Button(root, text='Хотите изменить?',
                           command=lambda: databupdate(db, sql, enteruserlogin, enteruserpassword))\
                     .grid(row=14, column=1)
-                excel(sql)
+                excel()
         else:
             tk.Label(root, text="Такая запись уже существует вы вошли в учетную запись")
             for value in sql.execute(f"SELECT * FROM students WHERE login = '{userlogin}'"
